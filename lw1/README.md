@@ -34,5 +34,193 @@
         5. Точки с координатами (x, y); (x, y + 1) отрисовываются каждый шаг. Это продолжается до тех пор, пока x не будет равен координате начала по оси Ox.
 
 ### Реализация основных частей кода
-Алгоритм ЦДА
+
+##### Алгоритм ЦДА
+
+```
+def dda(self, start, end):
+    x1, y1 = start
+    x2, y2 = end
+    dx = x2 - x1
+    dy = y2 - y1
+    steps = max(abs(dx), abs(dy))
+
+    if steps == 0:
+        return []
+
+    x_inc = dx / steps
+    y_inc = dy / steps
+
+    x = x1
+    y = y1
+    result = []
+
+    for i in range(steps + 1):
+        result.append({
+            "i": i,
+            "x": round(x),
+            "y": round(y)
+        })
+        x += x_inc
+        y += y_inc
+
+    return result
+```
+
+##### Алгоритм Брезенхема
+
+```
+def bresenham(self, start, end):
+    x1, y1 = start
+    x2, y2 = end
+    dx = abs(x2 - x1)
+    dy = abs(y2 - y1)
+    steep = dy > dx
+
+    if steep:
+        x1, y1 = y1, x1
+        x2, y2 = y2, x2
+        dx, dy = dy, dx
+
+    if x1 > x2:
+        x1, x2 = x2, x1
+        y1, y2 = y2, y1
+
+    dx = x2 - x1
+    dy = abs(y2 - y1)
+    error = dx / 2
+    ystep = 1 if y1 < y2 else -1
+    y = y1
+
+    result = []
+    i = 0
+
+    for x in range(x1, x2 + 1):
+        if steep:
+            plot_x = y
+            plot_y = x
+        else:
+            plot_x = x
+            plot_y = y
+
+        result.append({
+            "i": i,
+            "e": error,
+            "x": plot_x,
+            "y": plot_y,
+            "e_new": error - dy
+        })
+
+        error -= dy
+        if error < 0:
+            y += ystep
+            error += dx
+        i += 1
+
+    return result
+```
+
+##### Алгоритм Ву
+
+```
+def wu(self, start, end):
+    x1, y1 = start
+    x2, y2 = end
+    result = []
+
+    def ipart(x):
+        return math.floor(x)
+
+    def fpart(x):
+        return x - math.floor(x)
+
+    def rfpart(x):
+        return 1 - fpart(x)
+
+    dx = x2 - x1
+    dy = y2 - y1
+    steep = abs(dy) > abs(dx)
+
+    if steep:
+        x1, y1 = y1, x1
+        x2, y2 = y2, x2
+        dx, dy = dy, dx
+
+    if x2 < x1:
+        x1, x2 = x2, x1
+        y1, y2 = y2, y1
+
+    gradient = dy / dx if dx != 0 else 1.0
+
+    xend = round(x1)
+    yend = y1 + gradient * (xend - x1)
+    xgap = rfpart(x1 + 0.5)
+    xpxl1 = xend
+    ypxl1 = ipart(yend)
+
+    result.append({
+        "i": 0,
+        "x": xpxl1 if not steep else ypxl1,
+        "y": ypxl1 if not steep else xpxl1,
+        "intensity": rfpart(yend) * xgap
+    })
+
+    result.append({
+        "i": 0,
+        "x": xpxl1 if not steep else ypxl1 + 1,
+        "y": ypxl1 + 1 if not steep else xpxl1,
+        "intensity": fpart(yend) * xgap
+    })
+
+    intery = yend + gradient
+
+    xend = round(x2)
+    yend = y2 + gradient * (xend - x2)
+    xgap = fpart(x2 + 0.5)
+    xpxl2 = xend
+    ypxl2 = ipart(yend)
+
+    result.append({
+        "i": x2 - x1,
+        "x": xpxl2 if not steep else ypxl2,
+        "y": ypxl2 if not steep else xpxl2,
+        "intensity": rfpart(yend) * xgap
+    })
+
+    result.append({
+        "i": x2 - x1,
+        "x": xpxl2 if not steep else ypxl2 + 1,
+        "y": ypxl2 + 1 if not steep else xpxl2,
+        "intensity": fpart(yend) * xgap
+    })
+
+    index = 1
+    for x in range(xpxl1 + 1, xpxl2):
+        result.append({
+            "i": index,
+            "x": x if not steep else ipart(intery),
+            "y": ipart(intery) if not steep else x,
+            "intensity": rfpart(intery)
+        })
+
+        result.append({
+            "i": index,
+            "x": x if not steep else ipart(intery) + 1,
+            "y": ipart(intery) + 1 if not steep else x,
+            "intensity": fpart(intery)
+        })
+
+        intery += gradient
+        index += 1
+
+    return sorted(result, key=lambda s: s["i"])
+```
+
+### Результат работы программы
+
+##### Главное окно программы
+![](../img/lw1/main_window.png)
+
+##### Отображение линий
+![](../img/lw1/lines_displaying.png)
 
