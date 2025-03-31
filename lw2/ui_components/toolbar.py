@@ -1,0 +1,2 @@
+class Toolbar:
+    pass
