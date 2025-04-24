@@ -7,7 +7,10 @@ class StepDebugger:
         self.index: int = 0
 
     def current(self) -> list:
-        return self.steps[self.index]['points'] if self.index < len(self.steps) else []
+        points = []
+        for i in range(self.index + 1):
+            points.extend(self.steps[i]['points'])
+        return points
 
     def next(self) -> list:
         if self.index < len(self.steps) - 1:
