@@ -20,33 +20,40 @@ class Hyperbola(Curve):
     def step_by_step(self) -> Generator[dict, None, None]:
         x0 = self.parameters['center_x']
         y0 = self.parameters['center_y']
-        a = self.parameters['a']
-        b = self.parameters['b']
+        a = max(2, self.parameters['a'])  # не менее 2
+        b = max(2, self.parameters['b'])  # не менее 2
 
         a2 = a * a
         b2 = b * b
-        x = a
-        y = 0
+        MAX_X = 200  # ограничение по x
 
-        delta = a2 * ((x + 0.5) ** 2 - 1) - b2 * (y - 0.5) ** 2
+        for y in range(0, 101):  # шаг по y: от 0 вверх
+            try:
+                x_sq = a2 * (1 + (y * y) / b2)
+                x = int(x_sq ** 0.5)
+            except ZeroDivisionError:
+                continue
+            except ValueError:
+                continue  # если что-то пошло не так
 
-        while x < x0 + 100:
+            if x > MAX_X:
+                continue
+
+            points = [
+                (x0 + x, y0 + y), (x0 + x, y0 - y),
+                (x0 - x, y0 + y), (x0 - x, y0 - y)
+            ]
+
             yield {
-                'points': self._reflect_points(x0, y0, x, y)
-                'x': x, 'y': y, 'delta': delta
+                'points': points,
+                'x': x,
+                'y': y,
+                'delta': 0
             }
 
-            if delta < 0:
-                y += 1
-                delta += a2 * (2 * y + 1)
-            else:
-                x += 1
-                delta += b2 * (2 * x + 1) - a2 * (2 * y)
-
-
     @staticmethod
-    def _reflect_points(x0: int, y0: int, x: int, y: int) -> list[tuple[int, int]]:
+    def _reflect_points(x0, y0, x, y) -> list[tuple[int, int]]:
         return [
-            (x0 + x, y0 + y), (x0 - x, y0 + y),
-            (x0 + x, y0 - y), (x0 - x, y0 - y)
+            (x0 + x, y0 + y), (x0 + x, y0 - y),
+            (x0 - x, y0 + y), (x0 - x, y0 - y)
         ]
