@@ -20,21 +20,21 @@ class Hyperbola(Curve):
     def step_by_step(self) -> Generator[dict, None, None]:
         x0 = self.parameters['center_x']
         y0 = self.parameters['center_y']
-        a = max(2, self.parameters['a'])  # не менее 2
-        b = max(2, self.parameters['b'])  # не менее 2
+        a = max(2, self.parameters['a'])
+        b = max(2, self.parameters['b'])
 
         a2 = a * a
         b2 = b * b
-        MAX_X = 200  # ограничение по x
+        MAX_X = 200
 
-        for y in range(0, 101):  # шаг по y: от 0 вверх
+        for y in range(0, 101):
             try:
                 x_sq = a2 * (1 + (y * y) / b2)
                 x = int(x_sq ** 0.5)
             except ZeroDivisionError:
                 continue
             except ValueError:
-                continue  # если что-то пошло не так
+                continue
 
             if x > MAX_X:
                 continue

@@ -20,7 +20,7 @@ class MainWindow(QMainWindow):
 
         self.toolbar: Toolbar = Toolbar()
         self.canvas: DrawingCanvas = DrawingCanvas()
-        self.hint_label: QLabel = QLabel('Click to the center of the curve')
+        self.hint_label: QLabel = QLabel('Выберите первую точку фигуры')
 
         central_widget: QWidget = QWidget()
         layout: QVBoxLayout = QVBoxLayout()
