@@ -16,5 +16,6 @@ class BezierCurve(Curve):
         for t in t_values:
             x = sum(bernstein(i, n, t) * p[0] for i, p in enumerate(self.control_points))
             y = sum(bernstein(i, n, t) * p[1] for i, p in enumerate(self.control_points))
+            points.append((x, y))
 
         return points
