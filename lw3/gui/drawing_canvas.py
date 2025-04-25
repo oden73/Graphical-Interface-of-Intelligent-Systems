@@ -25,6 +25,7 @@ class DrawingCanvas(QWidget):
 
     def _step_forward(self):
         self.current_step += 1
+        print(f"Шаг анимации: {self.current_step}/{len(self.curve_points)}")
         if self.current_step >= len(self.curve_points):
             self.timer.stop()
         self.update()
@@ -63,13 +64,14 @@ class DrawingCanvas(QWidget):
 
         painter.setPen(QPen(Qt.black, 5))
         for x, y in self.control_points:
-            painter.drawLine(QPointF(x, y))
+            painter.drawPoint(QPointF(x, y))
 
         if self.curve_points:
             painter.setPen(QPen(Qt.darkGreen, 2))
-            for i in range(len(self.curve_points) - 1):
-                x1, y1 = self.curve_points[i]
-                x2, y2 = self.curve_points[i + 1]
+            visible_points = self.curve_points[:self.current_step]
+            for i in range(len(visible_points) - 1):
+                x1, y1 = visible_points[i]
+                x2, y2 = visible_points[i + 1]
                 painter.drawLine(QPointF(x1, y1), QPointF(x2, y2))
 
         if self.debug_overlay:

@@ -52,11 +52,14 @@ class MainWindow(QMainWindow):
 
     def toggle_step_mode(self, state):
         self.canvas.step_by_step_enabled = (state == 2)
+        print("Пошаговая отрисовка:", "ВКЛ" if self.canvas.step_by_step_enabled else "ВЫКЛ")
 
     def wrap_mouse_click(self, original_handler):
         def wrapped(event):
+            print("Клик по холсту")
             original_handler(event)
-            self.try_build_curve()
+            print("Точки сейчас:", self.canvas.control_points)
+            self.try_build_curve()  # отключим временно
         return wrapped
 
     def try_build_curve(self):
@@ -79,5 +82,8 @@ class MainWindow(QMainWindow):
             return
 
         if curve:
-            curve_points = curve.get_points(200)
-            self.canvas.set_curve_points(curve_points, animate=True)
+            try:
+                curve_points = curve.get_points(200)
+                self.canvas.set_curve_points(curve_points, animate=self.canvas.step_by_step_enabled)
+            except Exception as e:
+                print(f'Ошибка при построении кривой: {e}')
