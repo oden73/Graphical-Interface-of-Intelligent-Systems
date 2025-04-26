@@ -17,7 +17,7 @@ class DrawingCanvas(QWidget):
         self.timer = QTimer()
         self.timer.timeout.connect(self._step_forward)
 
-    def start_animation(self, interval=20):
+    def start_animation(self, interval=10):
         if not self.curve_points:
             return
         self.current_step = 0
@@ -25,12 +25,11 @@ class DrawingCanvas(QWidget):
 
     def _step_forward(self):
         self.current_step += 1
-        print(f"Шаг анимации: {self.current_step}/{len(self.curve_points)}")
         if self.current_step >= len(self.curve_points):
             self.timer.stop()
         self.update()
 
-    def set_curve_points(self, points, animate=False, interval=20):
+    def set_curve_points(self, points, animate=False, interval=10):
         self.curve_points = points
 
         if animate and self.step_by_step_enabled:
