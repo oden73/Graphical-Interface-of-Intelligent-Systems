@@ -1,41 +1,64 @@
 import numpy as np
 
-from .curve import Curve
+
+from src.curves.curve import Curve
 from src.math.geometry import subtract_points
 from src.math.matrix_operations import hermite_basis_matrix, apply_matrix
 
 
 class HermiteCurve(Curve):
-    def __init__(self, p1, p4, r1=None, r4=None):
-        self.p1 = np.array(p1)
-        self.p4 = np.array(p4)
+    def __init__(self, control_points):
+        super().__init__(control_points)
 
-        if r1 is None or r4 is None:
-            delta = subtract_points(self.p4, self.p1)
-            self.r1 = delta
-            self.r4 = delta
-        else:
-            self.r1 = np.array(r1)
-            self.r4 = np.array(r4)
+        self.points = [np.array(p) for p in control_points]
+        self.tangents = self._generate_tangents(self.points)
 
-        super().__init__([self.p1, self.p4, self.r1, self.r4])
+    @staticmethod
+    def _generate_tangents(points):
+        tangents = []
+        n = len(points)
+
+        for i in range(n):
+            if i == 0:
+                # Первая точка: R0 = P1 - P0
+                tangent = subtract_points(points[1], points[0])
+            elif i == n - 1:
+                # Последняя точка: Rn = Pn - Pn-1
+                tangent = subtract_points(points[-1], points[-2])
+            else:
+                # Внутренние точки: среднее между соседями
+                tangent = 0.5 * subtract_points(points[i + 1], points[i - 1])
+
+            tangents.append(tangent)
+        return tangents
 
     def get_points(self, num_points=100):
+        if len(self.points) < 2:
+            return []
+
+        curve_points = []
         M = hermite_basis_matrix()
 
-        Gx = np.array([self.p1[0], self.p4[0], self.r1[0], self.r4[0]])
-        Gy = np.array([self.p1[1], self.p4[1], self.r1[1], self.r4[1]])
+        segments = len(self.points) - 1
+        points_per_segment = max(2, num_points // segments)
 
-        coeffs_x = apply_matrix(M, Gx)
-        coeffs_y = apply_matrix(M, Gy)
+        for i in range(segments):
+            p0 = self.points[i]
+            p1 = self.points[i + 1]
+            r0 = self.tangents[i]
+            r1 = self.tangents[i + 1]
 
-        t_values = np.linspace(0, 1, num_points)
-        points = []
+            Gx = np.array([p0[0], p1[0], r0[0], r1[0]])
+            Gy = np.array([p0[1], p1[1], r0[1], r1[1]])
 
-        for t in t_values:
-            T = np.array([t**3, t**2, t, 1])
-            x = T @ coeffs_x
-            y = T @ coeffs_y
-            points.append((x, y))
+            coeffs_x = apply_matrix(M, Gx)
+            coeffs_y = apply_matrix(M, Gy)
 
-        return points
+            for j in range(points_per_segment):
+                t = j / (points_per_segment - 1)
+                T = np.array([t**3, t**2, t, 1])
+                x = T @ coeffs_x
+                y = T @ coeffs_y
+                curve_points.append((x, y))
+
+        return curve_points
