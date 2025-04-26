@@ -70,7 +70,7 @@ class MainWindow(QMainWindow):
         try:
             if curve_type == 'Hermite':
                 if len(points) >= 2:
-                    curve = HermiteCurve(points[0], points[1])
+                    curve = HermiteCurve(points)
             elif curve_type == 'Bezier':
                 if len(points) >= 2:
                     curve = BezierCurve(points)
