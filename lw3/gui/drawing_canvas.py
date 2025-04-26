@@ -17,6 +17,9 @@ class DrawingCanvas(QWidget):
         self.timer = QTimer()
         self.timer.timeout.connect(self._step_forward)
 
+        self.selected_point_index = None
+        self.selection_radius = 10
+
     def start_animation(self, interval=10):
         if not self.curve_points:
             return
@@ -47,7 +50,22 @@ class DrawingCanvas(QWidget):
 
     def mousePressEvent(self, event):
         pos = (event.x(), event.y())
+
+        for i, (px, py) in enumerate(self.control_points):
+            if (px - pos[0]) ** 2 + (py - pos[1]) ** 2 <= self.selection_radius ** 2:
+                self.selected_point_index = i
+                return
+
         self.control_points.append(pos)
+        self.update()
+
+    def mouseMoveEvent(self, event):
+        if self.selected_point_index is not None:
+            self.control_points[self.selected_point_index] = (event.x(), event.y())
+            self.update()
+
+    def mouseReleaseEvent(self, event):
+        self.selected_point_index = None
         self.update()
 
     def paintEvent(self, event):

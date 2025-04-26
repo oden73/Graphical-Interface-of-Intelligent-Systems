@@ -20,6 +20,8 @@ class MainWindow(QMainWindow):
         self.control_panel = ControlPanel()
 
         self.canvas.debug_overlay = self.overlay
+        self.canvas.mouseMoveEvent = self.wrap_mouse_move(self.canvas.mouseMoveEvent)
+        self.canvas.mouseReleaseEvent = self.wrap_mouse_release(self.canvas.mouseReleaseEvent)
 
         self.step_checkbox = QCheckBox('Debug')
         self.step_checkbox.stateChanged.connect(self.toggle_step_mode)
@@ -52,14 +54,24 @@ class MainWindow(QMainWindow):
 
     def toggle_step_mode(self, state):
         self.canvas.step_by_step_enabled = (state == 2)
-        print("Пошаговая отрисовка:", "ВКЛ" if self.canvas.step_by_step_enabled else "ВЫКЛ")
 
     def wrap_mouse_click(self, original_handler):
         def wrapped(event):
-            print("Клик по холсту")
             original_handler(event)
-            print("Точки сейчас:", self.canvas.control_points)
-            self.try_build_curve()  # отключим временно
+            self.try_build_curve()
+        return wrapped
+
+    def wrap_mouse_move(self, original_handler):
+        def wrapped(event):
+            original_handler(event)
+            if self.canvas.selected_point_index is not None:
+                self.try_build_curve()
+        return wrapped
+
+    def wrap_mouse_release(self, original_handler):
+        def wrapped(event):
+            original_handler(event)
+            self.try_build_curve()
         return wrapped
 
     def try_build_curve(self):
