@@ -6,8 +6,8 @@ from src.core.matrix import (
     create_rotation_matrix,
     create_scaling_matrix,
     create_reflection_matrix,
-    create_perspective_matrix
 )
+from src.core.projection import create_perspective_matrix
 from src.core.object_3d import Object3D
 
 
