@@ -104,3 +104,8 @@ def create_reflection_matrix(axis):
             [0, 0, -1, 0],
             [0, 0, 0, 1]
         ]
+
+
+def transpose_matrix(matrix):
+    return [[matrix[i][j] for j in range(4)] for i in range(4)]
+
