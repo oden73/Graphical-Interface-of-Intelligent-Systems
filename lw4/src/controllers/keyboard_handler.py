@@ -47,7 +47,6 @@ class KeyboardHandler:
                 self.obj.apply_transformation(matrix)
                 self.graphics_view.update()
 
-    @staticmethod
     def apply_perspective(self):
         fov = 45
         aspect = 16/9
