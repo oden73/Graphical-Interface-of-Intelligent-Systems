@@ -1,7 +1,7 @@
 import math
 
 
-def multiply_matrix(a, b) -> list[list]:
+def multiply_matrix(a, b):
     result = [[0] * 4 for _ in range(4)]
     for i in range(4):
         for j in range(4):
