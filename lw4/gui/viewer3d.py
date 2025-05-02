@@ -52,7 +52,6 @@ class Viewer3D(QWidget):
     def keyPressEvent(self, event) -> None:
         key = event.key()
         t = None
-        center = self.object3d.get_center(self.transform.get_matrix())
 
         if key == Qt.Key_W:
             t = matrix_utils.translation_matrix(0, 0.1, 0)
@@ -86,10 +85,13 @@ class Viewer3D(QWidget):
             t = matrix_utils.scale_matrix(0.9, 0.9, 0.9)
 
         elif key == Qt.Key_Z:
+            center = self.object3d.get_center(self.transform.get_matrix())
             t = matrix_utils.reflect_about_center(center, matrix_utils.reflection_matrix('xy'))
         elif key == Qt.Key_X:
+            center = self.object3d.get_center(self.transform.get_matrix())
             t = matrix_utils.reflect_about_center(center, matrix_utils.reflection_matrix('yz'))
         elif key == Qt.Key_Y:
+            center = self.object3d.get_center(self.transform.get_matrix())
             t = matrix_utils.reflect_about_center(center, matrix_utils.reflection_matrix('xz'))
 
         elif key == Qt.Key_R:
