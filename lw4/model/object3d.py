@@ -26,5 +26,15 @@ class Object3D:
 
     def get_transformed_edges(self, matrix: np.ndarray) -> list[tuple[np.ndarray, np.ndarray]]:
         transformed = self.vertices @ matrix.T
-        projected = transformed[:, :3] / transformed[:, 3:4]
-        return [(projected[i], projected[j]) for i, j in self.edges]
+        w = transformed[:, 3:4]
+
+        with np.errstate(divide='ignore', invalid='ignore'):
+            sage = w != 0
+            projected = np.where(sage, transformed[:, :3] / w, 0)
+
+        edges = []
+        for i, j in self.edges:
+            if w[i] != 0 and w[j] != 0:
+                edges.append((projected[i], projected[j]))
+
+        return edges
