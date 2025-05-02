@@ -67,7 +67,7 @@ def compose_matrices(*matrices) -> np.ndarray:
     return result
 
 
-def reflect_about_center(center: tuple[float, float, float], reflection_matrix: np.ndarray) -> np.ndarray:
+def reflect_about_center(center: tuple, reflection_matrix: np.ndarray) -> np.ndarray:
     cx, cy, cz = center
     to_origin: np.ndarray = translation_matrix(-cx, -cy, -cz)
     back: np.ndarray = translation_matrix(cx, cy, cz)

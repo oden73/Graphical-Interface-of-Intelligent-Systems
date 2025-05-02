@@ -42,7 +42,10 @@ class Object3D:
 
         return edges
 
-    def get_center(self) -> tuple[float, float, float]:
-        coords: np.ndarray = self.vertices[:, :3]
-        center: np.ndarray = coords.mean(axis=0)
+    def get_center(self, transform_matrix: np.ndarray) -> tuple:
+        transformed: np.ndarray = self.vertices @ transform_matrix.T
+        w = transformed[:, 3:4]
+        with np.errstate(divide='ignore', invalid='ignore'):
+            coords = np.where(w != 0, transformed[:, :3] / w, 0)
+        center = coords.mean(axis=0)
         return tuple(center)
