@@ -52,7 +52,7 @@ class Viewer3D(QWidget):
     def keyPressEvent(self, event) -> None:
         key = event.key()
         t = None
-        center = (0., 0., 0.)
+        center = self.object3d.get_center()
 
         if key == Qt.Key_W:
             t = matrix_utils.translation_matrix(0, 0.1, 0)

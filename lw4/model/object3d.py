@@ -41,3 +41,8 @@ class Object3D:
             print(f"[DEBUG] Vertex {idx} -> {row} (w = {row[3]})")
 
         return edges
+
+    def get_center(self) -> tuple[float, float, float]:
+        coords: np.ndarray = self.vertices[:, :3]
+        center: np.ndarray = coords.mean(axis=0)
+        return tuple(center)
