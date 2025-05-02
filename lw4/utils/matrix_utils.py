@@ -65,3 +65,10 @@ def compose_matrices(*matrices) -> np.ndarray:
     for m in reversed(matrices):
         result = result @ m
     return result
+
+
+def rotate_about_center(center: tuple[float, float, float], rotation_matrix: np.ndarray) -> np.ndarray:
+    cx, cy, cz = center
+    to_origin: np.ndarray = translation_matrix(-cx, -cy, -cz)
+    back: np.ndarray = translation_matrix(cx, cy, cz)
+    return compose_matrices(back, rotation_matrix, to_origin)

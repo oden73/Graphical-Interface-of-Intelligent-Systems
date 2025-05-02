@@ -56,6 +56,7 @@ class Viewer3D(QWidget):
     def keyPressEvent(self, event) -> None:
         key = event.key()
         t = None
+        center = (0., 0., -5.)
 
         if key == Qt.Key_W:
             t = matrix_utils.translation_matrix(0, 0.1, 0)
@@ -71,13 +72,17 @@ class Viewer3D(QWidget):
             t = matrix_utils.translation_matrix(0, 0, -0.1)
 
         elif key == Qt.Key_Left:
-            t = matrix_utils.rotation_matrix_y(np.radians(-10))
+            t = matrix_utils.rotate_about_center(center, matrix_utils.rotation_matrix_y(np.radians(-10)))
         elif key == Qt.Key_Right:
-            t = matrix_utils.rotation_matrix_y(np.radians(10))
+            t = matrix_utils.rotate_about_center(center, matrix_utils.rotation_matrix_y(np.radians(10)))
         elif key == Qt.Key_Up:
-            t = matrix_utils.rotation_matrix_x(np.radians(-10))
+            t = matrix_utils.rotate_about_center(center, matrix_utils.rotation_matrix_x(np.radians(-10)))
         elif key == Qt.Key_Down:
-            t = matrix_utils.rotation_matrix_x(np.radians(10))
+            t = matrix_utils.rotate_about_center(center, matrix_utils.rotation_matrix_x(np.radians(10)))
+        elif key == Qt.Key_C:
+            t = matrix_utils.rotate_about_center(center, matrix_utils.rotation_matrix_z(np.radians(-10)))
+        elif key == Qt.Key_V:
+            t = matrix_utils.rotate_about_center(center, matrix_utils.rotation_matrix_z(np.radians(10)))
 
         elif key == Qt.Key_Plus or key == Qt.Key_Equal:
             t = matrix_utils.scale_matrix(1.1, 1.1, 1.1)
