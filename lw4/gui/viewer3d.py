@@ -11,7 +11,10 @@ from utils import matrix_utils, projection
 class Viewer3D(QWidget):
     def __init__(self, parent=None) -> None:
         super().__init__(parent)
+
         self.setFocusPolicy(Qt.StrongFocus)
+        self.setFocus()
+
         self.object3d: Object3D = Object3D()
         self.transform: TransformManager = TransformManager()
         self.projection_matrix: np.ndarray = projection.perspective_projection_matrix(d=5.)
@@ -26,6 +29,7 @@ class Viewer3D(QWidget):
 
         print(f"[DEBUG] Loaded {self.object3d.vertices.shape[0]} vertices and {len(self.object3d.edges)} edges")
 
+        self.setFocus()
         self.update()
 
     def paintEvent(self, event) -> None:

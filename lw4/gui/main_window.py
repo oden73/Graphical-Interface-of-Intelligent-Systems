@@ -18,6 +18,8 @@ class MainWindow(QMainWindow):
         open_action.triggered.connect(self._open_file)
         file_menu.addAction(open_action)
 
+        self.viewer.setFocus()
+
     def _open_file(self) -> None:
         path, _ = QFileDialog.getOpenFileName(self, "Открыть модель", "", "Text Files (*.txt)")
         if path:
