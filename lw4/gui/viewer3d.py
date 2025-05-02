@@ -16,6 +16,8 @@ class Viewer3D(QWidget):
         self.transform: TransformManager = TransformManager()
         self.projection_matrix: np.ndarray = projection.perspective_projection_matrix(d=5.)
 
+        self.transform.reset()
+        self.transform.apply(matrix_utils.translation_matrix(0, 0, -5))
         self.transform.apply(matrix_utils.rotation_matrix_y(np.radians(30)))
         self.transform.apply(matrix_utils.rotation_matrix_x(np.radians(20)))
 
@@ -38,7 +40,7 @@ class Viewer3D(QWidget):
 
         center: QPoint = QPoint(self.width() // 2, self.height() // 2)
         edges: list[tuple[np.ndarray, np.ndarray]] = self.object3d.get_transformed_edges(
-            self.transform.get_matrix() @ self.projection_matrix
+            self.projection_matrix @ self.transform.get_matrix()
         )
         print(f"[DEBUG] Edges to draw: {len(edges)}")
 

@@ -37,4 +37,7 @@ class Object3D:
             if w[i] != 0 and w[j] != 0:
                 edges.append((projected[i], projected[j]))
 
+        for idx, row in enumerate(transformed):
+            print(f"[DEBUG] Vertex {idx} -> {row} (w = {row[3]})")
+
         return edges
