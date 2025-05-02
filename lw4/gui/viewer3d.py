@@ -18,10 +18,13 @@ class Viewer3D(QWidget):
 
     def load_model(self, path: str) -> None:
         self.object3d.load_from_file(path)
+        print(f"[DEBUG] Loaded {self.object3d.vertices.shape[0]} vertices and {len(self.object3d.edges)} edges")
         self.update()
 
     def paintEvent(self, event) -> None:
+        print("[DEBUG] paintEvent triggered")
         if self.object3d.vertices.size == 0:
+            print("[DEBUG] No vertices loaded")
             return
 
         painter: QPainter = QPainter(self)
@@ -32,6 +35,7 @@ class Viewer3D(QWidget):
         edges: list[tuple[np.ndarray, np.ndarray]] = self.object3d.get_transformed_edges(
             self.transform.get_matrix() @ self.projection_matrix
         )
+        print(f"[DEBUG] Edges to draw: {len(edges)}")
 
         for p1, p2 in edges:
             x1, y1 = int(p1[0] * 100 + center.x()), int(-p1[1] * 100 + center.y())

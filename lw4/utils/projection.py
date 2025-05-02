@@ -5,8 +5,8 @@ def perspective_projection_matrix(d = 1.) -> np.ndarray:
     return np.array([
         [1, 0, 0, 0],
         [0, 1, 0, 0],
-        [0, 0, 1, 1 / d],
-        [0, 0, 0, 0]
+        [0, 0, 1, 0],
+        [0, 0, 1 / d, 0]
     ], dtype=float)
 
 
