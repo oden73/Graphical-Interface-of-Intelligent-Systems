@@ -29,8 +29,8 @@ class Object3D:
         w = transformed[:, 3:4]
 
         with np.errstate(divide='ignore', invalid='ignore'):
-            sage = w != 0
-            projected = np.where(sage, transformed[:, :3] / w, 0)
+            safe = w != 0
+            projected = np.where(safe, transformed[:, :3] / w, 0)
 
         edges = []
         for i, j in self.edges:

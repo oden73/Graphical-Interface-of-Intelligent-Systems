@@ -14,7 +14,7 @@ class Viewer3D(QWidget):
         self.setFocusPolicy(Qt.StrongFocus)
         self.object3d: Object3D = Object3D()
         self.transform: TransformManager = TransformManager()
-        self.projection_matrix: np.ndarray = projection.perspective_projection_matrix(d=3.)
+        self.projection_matrix: np.ndarray = projection.perspective_projection_matrix(d=5.)
 
     def load_model(self, path: str) -> None:
         self.object3d.load_from_file(path)
@@ -34,8 +34,8 @@ class Viewer3D(QWidget):
         )
 
         for p1, p2 in edges:
-            x1, y1 = int(p1[0] * 50 + center.x()), int(-p1[1] * 50 + center.y())
-            x2, y2 = int(p2[0] * 50 + center.x()), int(-p2[1] * 50 + center.y())
+            x1, y1 = int(p1[0] * 100 + center.x()), int(-p1[1] * 100 + center.y())
+            x2, y2 = int(p2[0] * 100 + center.x()), int(-p2[1] * 100 + center.y())
             painter.drawLine(x1, y1, x2, y2)
 
     def keyPressEvent(self, event) -> None:
