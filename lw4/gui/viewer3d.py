@@ -16,9 +16,14 @@ class Viewer3D(QWidget):
         self.transform: TransformManager = TransformManager()
         self.projection_matrix: np.ndarray = projection.perspective_projection_matrix(d=5.)
 
+        self.transform.apply(matrix_utils.rotation_matrix_y(np.radians(30)))
+        self.transform.apply(matrix_utils.rotation_matrix_x(np.radians(20)))
+
     def load_model(self, path: str) -> None:
         self.object3d.load_from_file(path)
+
         print(f"[DEBUG] Loaded {self.object3d.vertices.shape[0]} vertices and {len(self.object3d.edges)} edges")
+
         self.update()
 
     def paintEvent(self, event) -> None:
