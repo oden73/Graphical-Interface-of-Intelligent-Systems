@@ -1,7 +1,7 @@
 from typing import List, Optional
 
-from models.point import Point
-from models.edge import Edge
+from models.geometry.point import Point
+from models.geometry.edge import Edge
 
 
 class Polygon:

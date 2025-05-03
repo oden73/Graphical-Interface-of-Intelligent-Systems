@@ -1,4 +1,4 @@
-from models.point import Point
+from models.geometry.point import Point
 
 
 class Edge:
